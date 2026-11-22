@@ -1,1 +1,72 @@
-# aljalouimart
+# Al Jaloui Mart
+
+Single-file online store for **Al Jaloui Mart**, Doha, Qatar. Customers browse products,
+build an order chit and send it over WhatsApp, or order cash on delivery. English and Arabic
+UI (Arabic switches the page to right-to-left). Currency: **QAR**.
+
+Live site: **https://mizaaaan.github.io/aljalouionlineshop/**
+No build step, no dependencies — `index.html` is the whole app.
+Non-technical editing guide: **[HANDOVER.md](HANDOVER.md)**.
+
+## Files
+
+| Path | Purpose |
+| --- | --- |
+| `index.html` | The entire store (HTML, CSS, JS, product data, translations) |
+| `assets/brand/*.png` | Web-optimised official logos (horizontal, stacked, mark; full-colour + yellow-on-dark) |
+| `brand-source/*.png` | Trimmed full-resolution master logos (source for `tools/make_brand_assets.py`; not used by the page) |
+| `assets/products/*.svg` | Product artwork (4 in use, 11 spare) |
+| `og-image.png` | 1200×630 social share image (`tools/make_og.py`) |
+| `favicon.ico`, `favicon-32.png`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `site.webmanifest` | Icons / installable-app metadata (`tools/make_icons.py`) |
+| `robots.txt`, `sitemap.xml` | Search-engine files |
+| `404.html` | Branded not-found page (works on github.io project path and on a custom domain) |
+| `tools/` | `make_brand_assets.py`, `make_icons.py`, `make_og.py` (need Pillow), `set-domain.py` (no deps) |
+
+## Config in `index.html`
+`const PRODUCTS` (prices in QAR) · `const CATEGORIES` · `const CONTACT` (phones, WhatsApp, email, Facebook, map query) ·
+`const CURRENCY` · `const MAX_QTY` · `const I18N` (en/ar strings). Footer contact links are filled from `CONTACT`;
+the static HTML values are a no-JS fallback only.
+
+## Deploy
+GitHub Pages from `main` / root. Any static host also works (serve `index.html` at `/`).
+
+### Custom domain
+1. Settings → Pages → Custom domain (creates `CNAME`), or `python3 tools/set-domain.py https://www.example.com/ --cname`.
+2. DNS: apex `A` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`; `CNAME www` → `mizaaaan.github.io`.
+3. Enable **Enforce HTTPS** once DNS resolves.
+4. `set-domain.py` rewrites canonical / Open Graph / Twitter / JSON-LD / robots / sitemap URLs.
+
+## Security notes
+A `Content-Security-Policy` meta tag restricts scripts/styles/fonts to self + Google Fonts and blocks all network calls
+(`connect-src 'none'`). Customer input is only ever placed in a URL-encoded WhatsApp link, never into the DOM as HTML.
+GitHub Pages cannot send HTTP security headers; use Cloudflare or similar if you need them.
+
+## Branding
+The site uses the official logo files (not a redrawn approximation). Brand colours: navy `#11234F`, yellow `#FFE00E`
+(CSS variables `--brand`, `--accent`). Logo sizes are CSS variables under `LOGO SIZES` in `:root` (`--logo-h`, `--logo-h-footer`,
+`--hero-d`, `--hero-logo-scale`, `--seal-d`) with responsive overrides at ≤370 px and ≥900 px. Logo `<img>` tags carry intrinsic
+`width`/`height` (no layout shift), translated `alt` text (`data-alt` → `I18N.brand_full`) and use `height` + `width:auto`, so a
+replacement file with a different aspect ratio still displays correctly. Verified at 320–1920 px, EN + AR, no overflow.
+
+## Changelog (production-readiness pass)
+
+**Logo / branding fix**: replaced the hand-drawn SVG approximation of the logo (header, hero, About, footer, 404, favicon, app icons, share image) with the real logo files; matched the brand colours to the logo; footer uses the yellow-on-dark logo; favicon.ico + PNG icons generated from the real mark; Open Graph image rebuilt; JSON-LD `logo` points to the real logo; `favicon.svg` removed (it was the old drawing).
+
+**Bugs fixed**
+- Icons invisible: `+` on Add buttons, `−`/`+` quantity steppers, close ✕, WhatsApp and phone icons on the order buttons (SVG sprite had no stroke colour).
+- Mobile: opening the Cash-on-Delivery form collapsed the cart item list to zero height — items now stay visible and the footer scrolls.
+- Wrong currency: prices/messages used Bangladeshi Taka (৳); JSON-LD said BDT. Now QAR everywhere, locale-aware (`QAR 14` / `14 ر.ق`).
+- Arabic/RTL: chit number `AJM-1234#`, phone numbers `…+974`, and price lines rendered in scrambled order; Arabic text fell back to a Latin monospace font; drawer opened on the wrong side; WhatsApp button and cart badge not mirrored; footer address / WhatsApp label / eyebrow / page title / About heading untranslated; Arabic-Indic digits mixed with Western prices.
+- Hero had ~100 px of extra empty space (section padding stacked on hero padding).
+- Header logo wrapped to two lines on phones after enlarging tap targets (fixed incl. 320 px).
+- WhatsApp hand-off: if the pop-up was blocked the user got "Opening WhatsApp…" and nothing happened; now falls back to same-tab and keeps the cart. Drawer now closes after sending; the per-order note no longer carries over to the next order.
+- Form: labels weren't linked to inputs; browser-language validation text bypassed the translations; phone number wasn't validated; added `autocomplete`/`inputmode`.
+- Quantity unbounded (now capped at 99, also when restored from storage).
+- `404.html` hard-coded `/aljalouionlineshop/` (broke on a custom domain).
+- Invalid `&` in meta description attributes; `og:locale:alternate` ar_SA → ar_QA.
+
+**Accessibility**: skip link; page set `inert` while the cart is open; focus kept on +/− after re-render; labelled language/stepper buttons; `aria-pressed` on category chips; `aria-expanded/controls` on toggles; cart button announces item count; heading order fixed; larger tap targets; WhatsApp-green buttons darkened to pass contrast.
+
+**Production**: favicon set + web manifest + Apple touch icon; CSP; contact details driven from one config; `set-domain.py`; sitemap date; removed another developer's machine path from `make_og.py`.
+
+**Known / by design**: product artwork carries English labels in Arabic mode; with JavaScript disabled only a notice is shown (store is JS-rendered); fonts load from Google Fonts.
