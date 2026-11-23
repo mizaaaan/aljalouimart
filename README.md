@@ -4,7 +4,7 @@ Single-file online store for **Al Jaloui Mart**, Doha, Qatar. Customers browse p
 build an order chit and send it over WhatsApp, or order cash on delivery. English and Arabic
 UI (Arabic switches the page to right-to-left). Currency: **QAR**.
 
-Live site: **https://mizaaaan.github.io/aljalouionlineshop/**
+Live site: **https://aljaloui.com/**
 No build step, no dependencies — `index.html` is the whole app.
 Non-technical editing guide: **[HANDOVER.md](HANDOVER.md)**.
 

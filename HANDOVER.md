@@ -19,7 +19,7 @@ also arrives as a WhatsApp message).
 | 3 | **Medicines** | The site lists medicine and a medicines category. Please confirm you are permitted to sell and deliver medicines online in Qatar; if not, remove that category and product. |
 | 4 | **Facebook page** | `facebook.com/aljalouimart` could not be verified. Open it and confirm it is yours, or change it (see "Change phone numbers"). |
 | 5 | **Missing shop information** | The site doesn't state opening hours, delivery charge, minimum order, delivery areas or a street address. Customers will ask — consider adding them to the About text. |
-| 6 | **Web address** | The site currently lives at `https://mizaaaan.github.io/aljalouionlineshop/`. See "Use your own domain" below. |
+| 6 | **Web address** | The site currently lives at `https://aljaloui.com/`. See "Use your own domain" below. |
 
 ---
 
