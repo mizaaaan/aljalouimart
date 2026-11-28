@@ -36,6 +36,18 @@ WHATSAPP = re.search(r"whatsapp: '(\d+)'", SRC).group(1)
 PHONE = re.search(r"phone: '(\+\d+)'", SRC).group(1)
 EMAIL = re.search(r"email: '([^']+)'", SRC).group(1)
 
+# The Meta Pixel is optional. index.html is the single source of truth for
+# whether there is one and what its id is; everything below keys off this.
+_pixel = re.search(r"fbq\('init', '(\d+)'\)", SRC)
+PIXEL = _pixel.group(1) if _pixel else ""
+
+# Only these three hosts, and only while the pixel exists.
+FB_SCRIPT_HOST = "https://connect.facebook.net"
+FB_PIXEL_HOST = "https://www.facebook.com"
+CSP_SCRIPT_EXTRA = " " + FB_SCRIPT_HOST if PIXEL else ""
+CSP_IMG_EXTRA = " " + FB_PIXEL_HOST if PIXEL else ""
+CSP_CONNECT = FB_PIXEL_HOST if PIXEL else "'none'"
+
 
 def read_categories():
     cats = {}
@@ -165,7 +177,7 @@ PAGE = """<!DOCTYPE html>
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#11234F">
   <meta http-equiv="Content-Security-Policy"
-    content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: {r2_host}; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline'{csp_script_extra}; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: {r2_host}{csp_img_extra}; connect-src {csp_connect}; object-src 'none'; base-uri 'self'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -191,7 +203,7 @@ PAGE = """<!DOCTYPE html>
   <meta name="twitter:description" content="{meta_desc}">
   <meta name="twitter:image" content="{og_image}">
   <meta name="twitter:image:alt" content="{name_en} — Al Jaloui Mart, Doha">
-  <script type="application/ld+json">
+{meta_pixel}  <script type="application/ld+json">
 {jsonld}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -501,8 +513,51 @@ def build(p):
         whatsapp=WHATSAPP, wa_pretty=pretty_phone(WHATSAPP),
         phone=PHONE, phone_pretty=pretty_phone(PHONE), email=EMAIL,
         jsonld=jsonld, css=CSS,
+        meta_pixel=meta_pixel(p, cat["en"]),
+        csp_script_extra=CSP_SCRIPT_EXTRA, csp_img_extra=CSP_IMG_EXTRA,
+        csp_connect=CSP_CONNECT,
         ar_json=_js(ar), en_json=_js(en),
     )
+
+
+def meta_pixel(p, cat_en):
+    """The Meta Pixel block for one product page, or nothing at all.
+
+    PageView matches the home page. ViewContent is what makes the pixel
+    worth having here: a bare PageView tells Meta a product page was
+    opened but not which product, so it cannot attribute an ad click to
+    an item or retarget on it.
+    """
+    if not PIXEL:
+        return ""
+    params = _js({
+        "content_ids": [p["slug"]],
+        "content_name": p["nameEn"],
+        "content_type": "product",
+        "content_category": cat_en,
+        "value": p["price"],
+        "currency": "QAR",
+    })
+    block = """  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '__ID__');
+  fbq('track', 'PageView');
+  fbq('track', 'ViewContent', __PARAMS__);
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=__ID__&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+"""
+    return block.replace("__PARAMS__", params).replace("__ID__", PIXEL)
 
 
 def _j(s):

@@ -40,10 +40,11 @@ GitHub Pages from `main` / root. Any static host also works (serve `index.html` 
 A `Content-Security-Policy` meta tag restricts scripts/styles/fonts to self + Google Fonts. Customer input is only
 ever placed in a URL-encoded WhatsApp link, never into the DOM as HTML.
 
-The home page additionally allows the Meta Pixel: `connect.facebook.net` under `script-src`, and `www.facebook.com`
-under `img-src` and `connect-src`. These three are the only third-party hosts the policy admits, and they exist
-solely for that pixel — remove the pixel and the three entries should go with it. The product pages under `p/`
-keep the tighter original policy (`connect-src 'none'`) because they carry no pixel.
+Every page additionally allows the Meta Pixel: `connect.facebook.net` under `script-src`, and `www.facebook.com`
+under `img-src` and `connect-src`. These are the only third-party hosts the policy admits and they exist solely
+for that pixel. On the product pages this is wired up by `make-product-pages.py`, which reads the pixel id out of
+`index.html`: delete the pixel there, re-run the generator, and the pages drop the snippet and go back to
+`connect-src 'none'` by themselves. The home page's own copy has to be removed by hand.
 
 GitHub Pages cannot send HTTP security headers; use Cloudflare or similar if you need them.
 
