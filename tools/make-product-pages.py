@@ -51,7 +51,10 @@ CF_SCRIPT_HOST = "https://static.cloudflareinsights.com"
 CF_BEACON_HOST = "https://cloudflareinsights.com"
 CSP_SCRIPT_EXTRA = (" " + FB_SCRIPT_HOST if PIXEL else "") + " " + CF_SCRIPT_HOST
 CSP_IMG_EXTRA = " " + FB_PIXEL_HOST if PIXEL else ""
-CSP_CONNECT = (FB_PIXEL_HOST + " " if PIXEL else "") + CF_BEACON_HOST
+# On a proxied domain the beacon reports to same-origin /cdn-cgi/rum, not
+# to cloudflareinsights.com, so 'self' is the entry that actually matters;
+# the named host stays for the standalone endpoint.
+CSP_CONNECT = "'self' " + (FB_PIXEL_HOST + " " if PIXEL else "") + CF_BEACON_HOST
 CSP_FRAME = " frame-src %s;" % FB_PIXEL_HOST if PIXEL else ""
 CSP_FORM = FB_PIXEL_HOST if PIXEL else "'none'"
 

@@ -46,9 +46,11 @@ back to a form POST into a hidden iframe for a larger one, so all four are neede
 silently. `form-action` deliberately does not list `'self'`: neither order form ever submits natively, so a JS
 failure makes the form do nothing instead of reloading the page and losing the cart.
 
-Cloudflare's analytics beacon needs two more, and they are not the same host: `static.cloudflareinsights.com`
-under `script-src` for the script, `cloudflareinsights.com` under `connect-src` for the data it reports. These
-are not tied to the pixel — the beacon is injected at the edge and appears in no source file here.
+Cloudflare's analytics beacon needs `static.cloudflareinsights.com` under `script-src`, and `'self'` under
+`connect-src`: the domain is proxied through Cloudflare, so the beacon reports to same-origin `/cdn-cgi/rum`
+rather than to the `cloudflareinsights.com` host the docs name for the standalone product. That host is listed
+too, for the standalone endpoint. None of this is tied to the pixel — the beacon is injected at the edge and
+appears in no source file here.
 
 On the product pages all of this is wired up by `make-product-pages.py`, which reads the pixel id out of
 `index.html`: delete the pixel there, re-run the generator, and the pages drop the snippet and every Facebook
