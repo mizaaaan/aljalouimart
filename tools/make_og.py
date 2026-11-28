@@ -49,12 +49,11 @@ FONT_R = find_font([
 
 
 def shop_number():
-    """The number printed on the card, read from CONTACT.phone in index.html
-    so it cannot drift. Note this is the shop phone, not CONTACT.whatsapp --
-    that is how the shop wants the card to read.
+    """The number printed on the card. The card says "Order on WhatsApp", so
+    this follows CONTACT.whatsapp in index.html and cannot drift from it.
     """
     src = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
-    d = re.search(r"phone: '\+?(\d+)'", src).group(1)
+    d = re.search(r"whatsapp: '(\d+)'", src).group(1)
     if d.startswith("974") and len(d) == 11:
         return "+974 %s %s" % (d[3:7], d[7:])
     return "+" + d
