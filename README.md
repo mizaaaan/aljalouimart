@@ -41,7 +41,11 @@ A `Content-Security-Policy` meta tag restricts scripts/styles/fonts to self + Go
 ever placed in a URL-encoded WhatsApp link, never into the DOM as HTML.
 
 Every page additionally allows the Meta Pixel: `connect.facebook.net` under `script-src`, and `www.facebook.com`
-under `img-src` and `connect-src`. These are the only third-party hosts the policy admits and they exist solely
+under `img-src`, `connect-src`, `frame-src` and `form-action`. fbevents sends a small event as an image but falls
+back to a form POST into a hidden iframe for a larger one, so all four are needed or the events are dropped
+silently. `form-action` deliberately does not list `'self'`: neither order form ever submits natively, so a JS
+failure makes the form do nothing instead of reloading the page and losing the cart. These are the only
+third-party hosts the policy admits and they exist solely
 for that pixel. On the product pages this is wired up by `make-product-pages.py`, which reads the pixel id out of
 `index.html`: delete the pixel there, re-run the generator, and the pages drop the snippet and go back to
 `connect-src 'none'` by themselves. The home page's own copy has to be removed by hand.

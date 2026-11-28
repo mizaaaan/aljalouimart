@@ -47,6 +47,8 @@ FB_PIXEL_HOST = "https://www.facebook.com"
 CSP_SCRIPT_EXTRA = " " + FB_SCRIPT_HOST if PIXEL else ""
 CSP_IMG_EXTRA = " " + FB_PIXEL_HOST if PIXEL else ""
 CSP_CONNECT = FB_PIXEL_HOST if PIXEL else "'none'"
+CSP_FRAME = " frame-src %s;" % FB_PIXEL_HOST if PIXEL else ""
+CSP_FORM = FB_PIXEL_HOST if PIXEL else "'none'"
 
 
 def read_categories():
@@ -177,7 +179,7 @@ PAGE = """<!DOCTYPE html>
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#11234F">
   <meta http-equiv="Content-Security-Policy"
-    content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline'{csp_script_extra}; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: {r2_host}{csp_img_extra}; connect-src {csp_connect}; object-src 'none'; base-uri 'self'; form-action 'none'">
+    content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline'{csp_script_extra}; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: {r2_host}{csp_img_extra}; connect-src {csp_connect};{csp_frame} object-src 'none'; base-uri 'self'; form-action {csp_form}">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -515,7 +517,7 @@ def build(p):
         jsonld=jsonld, css=CSS,
         meta_pixel=meta_pixel(p, cat["en"]),
         csp_script_extra=CSP_SCRIPT_EXTRA, csp_img_extra=CSP_IMG_EXTRA,
-        csp_connect=CSP_CONNECT,
+        csp_connect=CSP_CONNECT, csp_frame=CSP_FRAME, csp_form=CSP_FORM,
         ar_json=_js(ar), en_json=_js(en),
     )
 
