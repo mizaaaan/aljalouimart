@@ -41,12 +41,17 @@ EMAIL = re.search(r"email: '([^']+)'", SRC).group(1)
 _pixel = re.search(r"fbq\('init', '(\d+)'\)", SRC)
 PIXEL = _pixel.group(1) if _pixel else ""
 
-# Only these three hosts, and only while the pixel exists.
+# The pixel hosts come and go with the pixel. Cloudflare's analytics
+# beacon is injected at the edge, so its two hosts are always needed --
+# and they differ: the script is served from one, the data goes to the
+# other.
 FB_SCRIPT_HOST = "https://connect.facebook.net"
 FB_PIXEL_HOST = "https://www.facebook.com"
-CSP_SCRIPT_EXTRA = " " + FB_SCRIPT_HOST if PIXEL else ""
+CF_SCRIPT_HOST = "https://static.cloudflareinsights.com"
+CF_BEACON_HOST = "https://cloudflareinsights.com"
+CSP_SCRIPT_EXTRA = (" " + FB_SCRIPT_HOST if PIXEL else "") + " " + CF_SCRIPT_HOST
 CSP_IMG_EXTRA = " " + FB_PIXEL_HOST if PIXEL else ""
-CSP_CONNECT = FB_PIXEL_HOST if PIXEL else "'none'"
+CSP_CONNECT = (FB_PIXEL_HOST + " " if PIXEL else "") + CF_BEACON_HOST
 CSP_FRAME = " frame-src %s;" % FB_PIXEL_HOST if PIXEL else ""
 CSP_FORM = FB_PIXEL_HOST if PIXEL else "'none'"
 
