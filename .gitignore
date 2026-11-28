@@ -1,0 +1,2 @@
+# wrangler CLI cache (contains the selected Cloudflare account)
+.wrangler/
