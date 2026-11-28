@@ -527,23 +527,23 @@
     .hero-slide {
       flex: 0 0 100%;
       margin: 0;
-      padding: 22px 22px 18px;
+      padding: 0;
       text-align: center;
     }
 
     .hero-slide img {
       width: 100%;
-      max-width: clamp(280px, 40vw, 480px);
+      max-width: none;
       height: auto;
       aspect-ratio: 1 / 1;
-      object-fit: contain;
-      border-radius: 10px;
-      margin: 0 auto;
+      object-fit: cover;
+      margin: 0;
       display: block;
     }
 
     .hero-slide figcaption {
-      margin-top: 14px;
+      margin: 0;
+      padding: 14px 18px 18px;
     }
 
     .hero-slide-name {
@@ -1759,7 +1759,7 @@
        !! The prices below are PLACEHOLDERS — replace with the shop's real prices before launch. */
     /* Product images live in the Cloudflare R2 bucket "aljalouimart-media".
        To swap an image: upload the new file to that bucket under products/v3/ and change the name below. */
-    const MEDIA = 'https://pub-75ddd09c0ee44e93be11c31762842a79.r2.dev/products/v3';
+    const MEDIA = 'https://pub-75ddd09c0ee44e93be11c31762842a79.r2.dev/products/v4';
     const PRODUCTS = [
       { id: 1, cat: 'wellness', rx: false, img: MEDIA + '/warm-palace-belt.webp', nameEn: 'Smart Warm Palace Belt', nameAr: 'حزام التدفئة الذكي', descEn: 'Cordless heating belt with adjustable warmth settings and a rechargeable battery. Light enough to wear under clothes.', descAr: 'حزام تدفئة لاسلكي بإعدادات حرارة قابلة للتعديل وبطارية قابلة لإعادة الشحن. خفيف بما يكفي لارتدائه تحت الملابس.', price: 65 },
       { id: 2, cat: 'tools', rx: false, img: MEDIA + '/polishing-machine.webp', nameEn: 'Cordless Waxing & Polishing Machine', nameAr: 'آلة تلميع وتشميع لاسلكية', descEn: 'Lithium-battery polisher for car paint, furniture and floors. Supplied with foam and wool pads.', descAr: 'آلة تلميع تعمل ببطارية ليثيوم لطلاء السيارات والأثاث والأرضيات، مع وسادات إسفنجية وصوفية.', price: 120 },
