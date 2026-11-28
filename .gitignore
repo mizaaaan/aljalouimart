@@ -1,2 +1,5 @@
 # wrangler CLI cache (contains the selected Cloudflare account)
 .wrangler/
+
+# generated share-card build output (cards live in R2)
+build/

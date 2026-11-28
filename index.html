@@ -533,6 +533,12 @@
       text-align: center;
     }
 
+    .hero-slide-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
     .hero-slide img {
       width: 100%;
       max-width: 100%;
@@ -838,8 +844,58 @@
     }
 
     .card-media {
+      position: relative;
       background: var(--band);
       border-bottom: 1px solid var(--line);
+    }
+
+    .card-media>a {
+      display: block;
+    }
+
+    /* small round "copy link" button, sitting on the product photo */
+    .card-share {
+      position: absolute;
+      top: 10px;
+      inset-inline-end: 10px;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1.5px solid var(--line);
+      background: rgba(255, 255, 255, .94);
+      color: var(--brand);
+      cursor: pointer;
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(27, 42, 78, .14);
+      transition: background .15s ease, transform .15s ease, border-color .15s ease;
+    }
+
+    .card-share:hover {
+      background: var(--accent);
+      border-color: var(--accent-deep);
+      transform: scale(1.06);
+    }
+
+    .card-share svg {
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .card-name a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .card-name a:hover {
+      color: var(--brand);
+      text-decoration: underline;
     }
 
     .card-media img {
@@ -1560,6 +1616,11 @@
       stroke-linejoin="round">
       <path d="M15 8h2V5h-2a4 4 0 0 0-4 4v2H9v3h2v6h3v-6h2.2l.8-3H14V9a1 1 0 0 1 1-1z" />
     </symbol>
+    <symbol id="icon-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1" />
+      <path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1" />
+    </symbol>
   </svg>
 
   <div id="page">
@@ -1763,13 +1824,13 @@
        To swap an image: upload the new file to that bucket under products/v3/ and change the name below. */
     const MEDIA = 'https://pub-75ddd09c0ee44e93be11c31762842a79.r2.dev/products/v5';
     const PRODUCTS = [
-      { id: 1, cat: 'wellness', rx: false, img: MEDIA + '/warm-palace-belt.webp', nameEn: 'Smart Warm Palace Belt', nameAr: 'حزام التدفئة الذكي', descEn: 'Cordless heating belt with adjustable warmth settings and a rechargeable battery. Light enough to wear under clothes.', descAr: 'حزام تدفئة لاسلكي بإعدادات حرارة قابلة للتعديل وبطارية قابلة لإعادة الشحن. خفيف بما يكفي لارتدائه تحت الملابس.', price: 65 },
-      { id: 2, cat: 'tools', rx: false, img: MEDIA + '/polishing-machine.webp', nameEn: 'Cordless Waxing & Polishing Machine', nameAr: 'آلة تلميع وتشميع لاسلكية', descEn: 'Lithium-battery polisher for car paint, furniture and floors. Supplied with foam and wool pads.', descAr: 'آلة تلميع تعمل ببطارية ليثيوم لطلاء السيارات والأثاث والأرضيات، مع وسادات إسفنجية وصوفية.', price: 120 },
-      { id: 3, cat: 'islamic', rx: false, img: MEDIA + '/quran-lamp-sq112.webp', nameEn: 'Touch Lamp Quran Speaker (SQ-112)', nameAr: 'مكبر صوت القرآن مع مصباح لمسي (SQ-112)', descEn: 'Bedside touch lamp and Bluetooth speaker with 16 reciters, 18 translations, app control and RGB light modes.', descAr: 'مصباح لمسي بجانب السرير ومكبر بلوتوث مع 16 قارئًا و18 ترجمة وتحكم عبر التطبيق وإضاءة RGB.', price: 75 },
-      { id: 4, cat: 'bukhoor', rx: false, img: MEDIA + '/incense-burner.webp', nameEn: 'Mini Portable Incense Burner', nameAr: 'مبخرة كهربائية محمولة صغيرة', descEn: 'Rechargeable bukhoor burner with quick heating, Type-C charging and a wrist strap.', descAr: 'مبخرة بخور قابلة لإعادة الشحن بتسخين سريع وشحن Type-C ومعلاق لليد.', price: 89 },
-      { id: 5, cat: 'toys', rx: false, img: MEDIA + '/gear-racing-car.webp', nameEn: 'Concept Racing Transparent Gear Car', nameAr: 'سيارة سباق شفافة بتروس متحركة', descEn: 'Transparent concept car with moving coloured gears, lights and music. Ages 3+.', descAr: 'سيارة شفافة بتروس ملوّنة متحركة مع أضواء وموسيقى. من عمر 3 سنوات فأكثر.', price: 35 },
-      { id: 6, cat: 'islamic', rx: false, img: MEDIA + '/quran-speaker-sq858.webp', nameEn: 'SQ858 Quran Speaker', nameAr: 'مكبر صوت القرآن SQ858', descEn: 'Quran speaker with remote control, Bluetooth and SD card support. Boxed with a USB cable and user manual.', descAr: 'مكبر صوت للقرآن مع جهاز تحكم وبلوتوث ودعم بطاقة SD. يأتي معبأ مع كابل USB ودليل الاستخدام.', price: 85 },
-      { id: 7, cat: 'art', rx: false, img: MEDIA + '/art-set-168pcs.webp', nameEn: 'Super Mega Art Set (168 pcs)', nameAr: 'طقم الرسم الكبير (168 قطعة)', descEn: '168-piece set with colour pencils, oil pastels, watercolours, markers, palette and brush.', descAr: 'طقم من 168 قطعة يضم أقلام تلوين وألوان زيتية وألوان مائية وأقلام ماركر ولوح ألوان وفرشاة.', price: 55 }
+      { id: 1, slug: 'smart-warm-palace-belt', cat: 'wellness', rx: false, img: MEDIA + '/warm-palace-belt.webp', nameEn: 'Smart Warm Palace Belt', nameAr: 'حزام التدفئة الذكي', descEn: 'Cordless heating belt with adjustable warmth settings and a rechargeable battery. Light enough to wear under clothes.', descAr: 'حزام تدفئة لاسلكي بإعدادات حرارة قابلة للتعديل وبطارية قابلة لإعادة الشحن. خفيف بما يكفي لارتدائه تحت الملابس.', price: 65 },
+      { id: 2, slug: 'cordless-polishing-machine', cat: 'tools', rx: false, img: MEDIA + '/polishing-machine.webp', nameEn: 'Cordless Waxing & Polishing Machine', nameAr: 'آلة تلميع وتشميع لاسلكية', descEn: 'Lithium-battery polisher for car paint, furniture and floors. Supplied with foam and wool pads.', descAr: 'آلة تلميع تعمل ببطارية ليثيوم لطلاء السيارات والأثاث والأرضيات، مع وسادات إسفنجية وصوفية.', price: 120 },
+      { id: 3, slug: 'touch-lamp-quran-speaker-sq112', cat: 'islamic', rx: false, img: MEDIA + '/quran-lamp-sq112.webp', nameEn: 'Touch Lamp Quran Speaker (SQ-112)', nameAr: 'مكبر صوت القرآن مع مصباح لمسي (SQ-112)', descEn: 'Bedside touch lamp and Bluetooth speaker with 16 reciters, 18 translations, app control and RGB light modes.', descAr: 'مصباح لمسي بجانب السرير ومكبر بلوتوث مع 16 قارئًا و18 ترجمة وتحكم عبر التطبيق وإضاءة RGB.', price: 75 },
+      { id: 4, slug: 'mini-portable-incense-burner', cat: 'bukhoor', rx: false, img: MEDIA + '/incense-burner.webp', nameEn: 'Mini Portable Incense Burner', nameAr: 'مبخرة كهربائية محمولة صغيرة', descEn: 'Rechargeable bukhoor burner with quick heating, Type-C charging and a wrist strap.', descAr: 'مبخرة بخور قابلة لإعادة الشحن بتسخين سريع وشحن Type-C ومعلاق لليد.', price: 89 },
+      { id: 5, slug: 'concept-racing-gear-car', cat: 'toys', rx: false, img: MEDIA + '/gear-racing-car.webp', nameEn: 'Concept Racing Transparent Gear Car', nameAr: 'سيارة سباق شفافة بتروس متحركة', descEn: 'Transparent concept car with moving coloured gears, lights and music. Ages 3+.', descAr: 'سيارة شفافة بتروس ملوّنة متحركة مع أضواء وموسيقى. من عمر 3 سنوات فأكثر.', price: 35 },
+      { id: 6, slug: 'sq858-quran-speaker', cat: 'islamic', rx: false, img: MEDIA + '/quran-speaker-sq858.webp', nameEn: 'SQ858 Quran Speaker', nameAr: 'مكبر صوت القرآن SQ858', descEn: 'Quran speaker with remote control, Bluetooth and SD card support. Boxed with a USB cable and user manual.', descAr: 'مكبر صوت للقرآن مع جهاز تحكم وبلوتوث ودعم بطاقة SD. يأتي معبأ مع كابل USB ودليل الاستخدام.', price: 85 },
+      { id: 7, slug: 'super-mega-art-set-168pcs', cat: 'art', rx: false, img: MEDIA + '/art-set-168pcs.webp', nameEn: 'Super Mega Art Set (168 pcs)', nameAr: 'طقم الرسم الكبير (168 قطعة)', descEn: '168-piece set with colour pencils, oil pastels, watercolours, markers, palette and brush.', descAr: 'طقم من 168 قطعة يضم أقلام تلوين وألوان زيتية وألوان مائية وأقلام ماركر ولوح ألوان وفرشاة.', price: 55 }
     ];
     const CATEGORIES = [
       { key: 'all', en: 'All', ar: 'الكل', color: 'var(--ink)' },
@@ -1808,7 +1869,7 @@
         trust3_b: 'Cash on delivery', trust3_s: 'Pay when it arrives',
         trust4_b: 'WhatsApp ordering', trust4_s: 'Order in a chat, no app needed',
         products_eyebrow: 'WHAT WE STOCK', products_title: 'Products', products_sub: 'Tap a category to filter, then add items to your order chit.',
-        add_to_cart: 'Add', rx_tag: 'Rx', cart_remove: 'Remove', presc_note: '(Will also send a photo of the prescription for Rx items.)',
+        add_to_cart: 'Add', share_copy: 'Copy link to this product', toast_copied: 'Product link copied.', rx_tag: 'Rx', cart_remove: 'Remove', presc_note: '(Will also send a photo of the prescription for Rx items.)',
         cart_title: 'Your Order Chit',
         cart_empty_t: 'Your chit is empty', cart_empty_s: 'Add products to start an order.',
         subtotal: 'Subtotal', rx_note: 'Ordering a prescription item? Please also send a photo of your prescription on WhatsApp.',
@@ -1841,7 +1902,7 @@
         trust3_b: 'الدفع عند الاستلام', trust3_s: 'ادفع عند وصول طلبك',
         trust4_b: 'الطلب عبر واتساب', trust4_s: 'اطلب في محادثة، بدون تطبيق',
         products_eyebrow: 'ما نوفّره', products_title: 'المنتجات', products_sub: 'اختر فئة للتصفية، ثم أضف المنتجات إلى قائمة طلبك.',
-        add_to_cart: 'أضف', rx_tag: 'وصفة', cart_remove: 'إزالة', presc_note: '(سنطلب أيضًا صورة الوصفة الطبية لمنتجات الوصفة.)',
+        add_to_cart: 'أضف', share_copy: 'انسخ رابط هذا المنتج', toast_copied: 'تم نسخ رابط المنتج.', rx_tag: 'وصفة', cart_remove: 'إزالة', presc_note: '(سنطلب أيضًا صورة الوصفة الطبية لمنتجات الوصفة.)',
         cart_title: 'قائمة طلبك',
         cart_empty_t: 'قائمتك فارغة', cart_empty_s: 'أضف منتجات لبدء الطلب.',
         subtotal: 'المجموع الفرعي', rx_note: 'هل تطلب منتجًا بوصفة طبية؟ يرجى إرسال صورة الوصفة على واتساب أيضًا.',
@@ -1931,6 +1992,31 @@
     function fmtLang(n, lang) { return lang === 'ar' ? `${money(n)} ${CURRENCY.ar}` : `${CURRENCY.en} ${money(n)}`; }
     function fmt(n) { return `<bdi>${fmtLang(n, state.lang)}</bdi>`; }          // for on-page HTML
     function fmtPlain(n) { return fmtLang(n, 'en'); }                           // for the WhatsApp message
+    /* Every product has its own shareable page at /p/<slug> (built by tools/make-product-pages.py). */
+    function productUrl(p, relative) { return relative ? `/p/${p.slug}` : `${location.origin}/p/${p.slug}`; }
+
+    function copyProductLink(slug) {
+      const p = PRODUCTS.find(pr => pr.slug === slug);
+      if (!p) return;
+      const url = productUrl(p, false);
+      const done = () => showToast(t('toast_copied'));
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, () => legacyCopy(url, done));
+      } else legacyCopy(url, done);
+    }
+
+    function legacyCopy(text, done) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { showToast(text); }
+      document.body.removeChild(ta);
+    }
+
     function prettyPhone(v) { const d = String(v).replace(/\D/g, ''); return d.startsWith('974') && d.length === 11 ? `+974 ${d.slice(3, 7)} ${d.slice(7)}` : '+' + d; }
     function applyContact() {
       const set = (sel, fn) => document.querySelectorAll(sel).forEach(fn);
@@ -1989,14 +2075,17 @@
     <article class="card">
       <div class="card-tab" style="--catColor:${catColor(p.cat)}"></div>
       <div class="card-media">
-        <img src="${p.img}" alt="${state.lang === 'en' ? p.nameEn : p.nameAr}" loading="lazy" decoding="async" width="400" height="400">
+        <a href="${productUrl(p, true)}" aria-label="${state.lang === 'en' ? p.nameEn : p.nameAr}">
+          <img src="${p.img}" alt="${state.lang === 'en' ? p.nameEn : p.nameAr}" loading="lazy" decoding="async" width="400" height="400">
+        </a>
+        <button type="button" class="card-share" data-share="${p.slug}" title="${t('share_copy')}" aria-label="${t('share_copy')}"><svg aria-hidden="true"><use href="#icon-link"/></svg></button>
       </div>
       <div class="card-body">
         <div class="card-tags">
           <span class="tag">${state.lang === 'en' ? (CATEGORIES.find(c => c.key === p.cat) || {}).en : (CATEGORIES.find(c => c.key === p.cat) || {}).ar}</span>
           ${p.rx ? `<span class="tag rx">${t('rx_tag')}</span>` : ''}
         </div>
-        <h3 class="card-name">${state.lang === 'en' ? p.nameEn : p.nameAr}</h3>
+        <h3 class="card-name"><a href="${productUrl(p, true)}">${state.lang === 'en' ? p.nameEn : p.nameAr}</a></h3>
         <p class="card-desc">${state.lang === 'en' ? p.descEn : p.descAr}</p>
         <div class="card-bottom">
           <span class="price mono">${fmt(p.price)}</span>
@@ -2005,6 +2094,9 @@
       </div>
     </article>
   `).join('');
+      grid.querySelectorAll('.card-share').forEach(btn => {
+        btn.addEventListener('click', () => copyProductLink(btn.dataset.share));
+      });
       grid.querySelectorAll('.btn-add').forEach(btn => {
         btn.addEventListener('click', () => {
           addToCart(Number(btn.dataset.id));
@@ -2049,11 +2141,13 @@
       const label = p => state.lang === 'en' ? p.nameEn : p.nameAr;
       track.innerHTML = PRODUCTS.map((p, i) => `
       <figure class="hero-slide">
-        <img src="${p.img}" alt="${label(p)}" width="400" height="400" decoding="async"${i ? ' loading="lazy"' : ''}>
-        <figcaption>
-          <span class="hero-slide-name">${label(p)}</span>
-          <span class="hero-slide-price mono">${fmt(p.price)}</span>
-        </figcaption>
+        <a class="hero-slide-link" href="${productUrl(p, true)}">
+          <img src="${p.img}" alt="${label(p)}" width="400" height="400" decoding="async"${i ? ' loading="lazy"' : ''}>
+          <figcaption>
+            <span class="hero-slide-name">${label(p)}</span>
+            <span class="hero-slide-price mono">${fmt(p.price)}</span>
+          </figcaption>
+        </a>
       </figure>`).join('');
       dots.innerHTML = PRODUCTS.map((p, i) => `<button type="button" class="hero-dot" data-i="${i}" aria-label="${label(p)}"></button>`).join('');
       dots.querySelectorAll('.hero-dot').forEach(b => b.addEventListener('click', () => { goHero(Number(b.dataset.i)); heroPlay(); }));
