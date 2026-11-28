@@ -14,9 +14,9 @@ also arrives as a WhatsApp message).
 
 | # | Item | Why it matters |
 |---|------|----------------|
-| 1 | **Prices** | The four prices in the site are *placeholders* (the original prices were in Bangladeshi Taka; they were converted to Qatari Riyals at roughly 33 ৳ = 1 QAR). Replace them with your real prices. |
-| 2 | **Product list** | Only 4 products are shown. Artwork for 11 more products is included in `assets/products/` and can be switched on (see "Add a product"). Confirm the brands (Napa, Seclo, Fexo, ORSaline-N) are what you actually stock in Qatar. |
-| 3 | **Medicines** | The site lists medicine and a medicines category. Please confirm you are permitted to sell and deliver medicines online in Qatar; if not, remove that category and product. |
+| 1 | **Prices** | The seven prices were confirmed by the shop. Check them again whenever stock or supplier costs change. |
+| 2 | **Product list** | Seven products are live. Their photos live in the Cloudflare R2 bucket `aljalouimart-media`, not in this repository. |
+| 3 | **Product pages** | Every product also has its own shareable page under `p/`, with its own WhatsApp/Facebook preview card. These are generated — never edit them by hand. |
 | 4 | **Facebook page** | `facebook.com/aljalouimart` could not be verified. Open it and confirm it is yours, or change it (see "Change phone numbers"). |
 | 5 | **Missing shop information** | The site doesn't state opening hours, delivery charge, minimum order, delivery areas or a street address. Customers will ask — consider adding them to the About text. |
 | 6 | **Web address** | The site currently lives at `https://aljaloui.com/`. See "Use your own domain" below. |
@@ -36,14 +36,16 @@ Copy one whole line starting with `{id:` inside `PRODUCTS`, paste it below, and 
 `img` (picture path), `nameEn` / `nameAr`, `descEn` / `descAr`, `price`.
 Set `rx:true` for prescription-only items — the customer is then reminded to send a photo of the prescription.
 
-Spare artwork already in `assets/products/`: multivitamin, seclo-20mg, fexo-120mg, orsaline-n, gripe-water, baby-lotion,
-surgical-mask, antiseptic-liquid, blood-pressure-monitor, glucometer, protein-supplement.
+Give the new product a `slug` too (lower-case words joined by hyphens). That is the address of its shareable page,
+so `slug: 'mini-portable-incense-burner'` is served at `/p/mini-portable-incense-burner`.
 
 ### Remove a product
 Delete its whole `{id:... }` line (a category with no products hides itself automatically). Mind the commas: every line ends with a comma **except the last one**.
 
-### Use a real photo instead of the drawing
-Put the photo (square, ~800×800 px, `.jpg`/`.png`/`.webp`) in `assets/products/` and set that product's `img:` to its path.
+### Change a product photo
+Photos live in the Cloudflare R2 bucket `aljalouimart-media`, under the path in `MEDIA`.
+Upload the new square photo (~800×800 px, `.webp`) there, then set that product's `img:` to the new file name.
+Afterwards run `python tools/make-product-pages.py` and `python tools/make-product-og.py --upload` so the product page and its share card match.
 
 ### Change the logo (replace it or resize it)
 All logo pictures live in `assets/brand/`. To **replace** one, overwrite the file with a new transparent PNG using the *same file name*:

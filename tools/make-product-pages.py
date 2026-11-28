@@ -119,6 +119,18 @@ stroke-linecap:round;stroke-linejoin:round}
 .btn-copy:hover{background:var(--accent-deep)}
 .btn-ghost{background:var(--paper);color:var(--brand);border-color:var(--line)}
 .btn-ghost:hover{border-color:var(--brand)}
+.order-form{display:flex;flex-direction:column;gap:12px;margin:0 0 10px;padding:18px;
+border:1.5px solid var(--line);border-radius:var(--radius);background:var(--band)}
+.order-intro{margin:0;font-size:14px;font-weight:700;color:var(--ink)}
+.order-form label{font-size:13px;font-weight:600;color:var(--ink);display:block;margin-bottom:5px}
+.order-form label.req::after{content:' *';color:#C0392B}
+.order-form input,.order-form textarea{width:100%;padding:11px 12px;border:1.5px solid var(--line);
+border-radius:10px;font:inherit;font-size:15px;background:var(--paper);color:var(--ink)}
+.order-form input:focus,.order-form textarea:focus{outline:2px solid var(--brand);outline-offset:1px}
+.order-form textarea{min-height:68px;resize:vertical}
+.field-hint{font-size:12px;color:var(--ink-soft);margin-top:4px}
+.order-form .btn{margin-bottom:0}
+.order-disclaimer{margin:0;font-size:12px;color:var(--ink-soft)}
 .assure{list-style:none;margin:20px 0 0;padding:16px 0 0;border-top:1.5px solid var(--line);
 display:grid;gap:8px;font-size:15px;color:var(--ink-soft)}
 .assure li{display:flex;gap:9px;align-items:flex-start}
@@ -217,11 +229,37 @@ PAGE = """<!DOCTYPE html>
         <p class="price"><bdi data-t="price">QAR {price}</bdi></p>
         <p class="desc" data-t="desc">{desc_en}</p>
 
-        <a class="btn btn-wa" id="waBtn" href="{wa_url}" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 20.5l1.7-5.3A8.5 8.5 0 1 1 21 11.5z" />
-          </svg><span data-t="order">Order this on WhatsApp</span>
-        </a>
+        <form class="order-form" id="orderForm" novalidate>
+          <p class="order-intro" data-t="intro">Cash on delivery — we need these to bring your
+            order to you.</p>
+          <div>
+            <label class="req" for="ofName" data-t="l_name">Full name</label>
+            <input type="text" id="ofName" name="name" autocomplete="name" maxlength="120" required
+              aria-required="true">
+          </div>
+          <div>
+            <label class="req" for="ofPhone" data-t="l_phone">Phone number</label>
+            <input type="tel" id="ofPhone" name="tel" autocomplete="tel" inputmode="tel" dir="ltr"
+              maxlength="30" required aria-required="true" aria-describedby="ofPhoneHint">
+            <div class="field-hint" id="ofPhoneHint" data-t="hint">e.g. +974 5555 1234</div>
+          </div>
+          <div>
+            <label class="req" for="ofAddress" data-t="l_addr">Delivery address</label>
+            <textarea id="ofAddress" name="address" autocomplete="street-address" maxlength="300"
+              required aria-required="true"></textarea>
+          </div>
+          <div>
+            <label for="ofNote" data-t="l_note">Order note (optional)</label>
+            <textarea id="ofNote" name="note" maxlength="300"></textarea>
+          </div>
+          <button type="submit" class="btn btn-wa" id="waBtn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 20.5l1.7-5.3A8.5 8.5 0 1 1 21 11.5z" />
+            </svg><span data-t="order">Order this on WhatsApp</span>
+          </button>
+          <p class="order-disclaimer" data-t="disc">We'll message you on WhatsApp to confirm your
+            order and delivery time.</p>
+        </form>
         <button type="button" class="btn btn-copy" id="copyBtn">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1" />
@@ -275,9 +313,60 @@ PAGE = """<!DOCTYPE html>
         document.title = dict.title;
         document.getElementById('shot').alt = dict.name;
         document.getElementById('langBtn').textContent = lang === 'ar' ? 'EN' : 'عربي';
-        document.getElementById('waBtn').href =
-          'https://wa.me/{whatsapp}?text=' + encodeURIComponent(dict.wa);
       }}
+
+      /* Delivery details, shared with the shop page under the same key. */
+      var COD_KEY = 'ajm_cod';
+      var FIELDS = [['ofName', 'name'], ['ofPhone', 'phone'],
+                    ['ofAddress', 'address'], ['ofNote', 'note']];
+      var cod = {{ name: '', phone: '', address: '', note: '' }};
+      try {{
+        var saved = JSON.parse(localStorage.getItem(COD_KEY) || '{{}}');
+        FIELDS.forEach(function (f) {{
+          if (typeof saved[f[1]] === 'string') cod[f[1]] = saved[f[1]].slice(0, 300);
+        }});
+      }} catch (e) {{ }}
+
+      FIELDS.forEach(function (f) {{
+        var el = document.getElementById(f[0]);
+        el.value = cod[f[1]];
+        el.addEventListener('input', function () {{
+          cod[f[1]] = el.value;
+          el.setCustomValidity('');
+          try {{ localStorage.setItem(COD_KEY, JSON.stringify(cod)); }} catch (e) {{ }}
+        }});
+      }});
+
+      document.getElementById('orderForm').addEventListener('submit', function (e) {{
+        e.preventDefault();
+        var dict = lang === 'ar' ? AR : EN;
+        var name = cod.name.trim(), phone = cod.phone.trim(), addr = cod.address.trim();
+        var digits = phone.replace(/\\D/g, '');
+        var bad = null;
+        if (!name) bad = ['ofName', dict.required];
+        else if (!phone) bad = ['ofPhone', dict.required];
+        else if (digits.length < 7 || digits.length > 15) bad = ['ofPhone', dict.badphone];
+        else if (!addr) bad = ['ofAddress', dict.required];
+        if (bad) {{
+          var el = document.getElementById(bad[0]);
+          el.setCustomValidity(bad[1]);
+          el.reportValidity();
+          return;
+        }}
+        var lines = ['*Al Jaloui Mart — New Order* (Chit #AJM-'
+          + Math.floor(1000 + Math.random() * 9000) + ')', '',
+          '• {name_en} x1 — QAR {price}', '',
+          'Subtotal: QAR {price}', '',
+          'Name: ' + name, 'Phone: ' + phone, 'Address: ' + addr];
+        if (cod.note.trim()) lines.push('Note: ' + cod.note.trim());
+        lines.push('Payment: Cash on Delivery', '', '{url}');
+        var url = 'https://wa.me/{whatsapp}?text=' + encodeURIComponent(lines.join('\\n'));
+        cod.note = '';
+        document.getElementById('ofNote').value = '';
+        try {{ localStorage.setItem(COD_KEY, JSON.stringify(cod)); }} catch (e) {{ }}
+        say(dict.sending);
+        if (!window.open(url, '_blank')) window.location.href = url;
+      }});
 
       document.getElementById('langBtn').addEventListener('click', function () {{
         lang = lang === 'ar' ? 'en' : 'ar';
@@ -339,11 +428,6 @@ def build(p):
         p["nameEn"], price_en, p["descEn"])
     og_title = "%s — %s | Al Jaloui Mart" % (p["nameEn"], price_en)
 
-    wa_en = "Hello Al Jaloui Mart! I would like to order:\n\n*%s* — %s\n%s" % (
-        p["nameEn"], price_en, url)
-    wa_ar = "مرحبًا الجلوي مارت! أرغب في طلب:\n\n*%s* — %s\n%s" % (
-        p["nameAr"], price_ar, url)
-
     jsonld = """{
   "@context": "https://schema.org",
   "@type": "Product",
@@ -380,7 +464,16 @@ def build(p):
         "a2": "توصيل داخل الدوحة",
         "a3": "اطلب عبر المحادثة — دون تطبيق أو حساب",
         "doha": "الدوحة، قطر",
-        "wa": wa_ar,
+        "intro": "الدفع عند الاستلام — نحتاج هذه البيانات لتوصيل طلبك.",
+        "l_name": "الاسم الكامل",
+        "l_phone": "رقم الهاتف",
+        "l_addr": "عنوان التوصيل",
+        "l_note": "ملاحظة على الطلب (اختياري)",
+        "hint": "مثال: ‎+974 5555 1234",
+        "required": "يرجى ملء هذا الحقل قبل تأكيد الطلب.",
+        "badphone": "يرجى إدخال رقم هاتف صحيح.",
+        "disc": "سنراسلك على واتساب لتأكيد طلبك وموعد التوصيل.",
+        "sending": "جارٍ فتح واتساب لتأكيد طلبك…",
     }
     en = {
         "title": "%s — %s | Al Jaloui Mart" % (p["nameEn"], price_en),
@@ -389,7 +482,15 @@ def build(p):
         "copied": "Link copied.", "all": "See all products",
         "a1": "Cash on delivery", "a2": "Delivered around Doha",
         "a3": "Order in a chat — no app, no account",
-        "doha": "Doha, Qatar", "wa": wa_en,
+        "doha": "Doha, Qatar",
+        "intro": "Cash on delivery — we need these to bring your order to you.",
+        "l_name": "Full name", "l_phone": "Phone number",
+        "l_addr": "Delivery address", "l_note": "Order note (optional)",
+        "hint": "e.g. +974 5555 1234",
+        "required": "Please fill in this field before confirming your order.",
+        "badphone": "Please enter a valid phone number.",
+        "disc": "We'll message you on WhatsApp to confirm your order and delivery time.",
+        "sending": "Opening WhatsApp to confirm your order…",
     }
 
     return PAGE.format(
@@ -397,7 +498,6 @@ def build(p):
         url=esc(url), og_image=esc("%s/%s.jpg" % (OG_BASE, p["slug"])),
         img=esc(p["img"]), r2_host=R2_HOST, price=p["price"],
         name_en=esc(p["nameEn"]), desc_en=esc(p["descEn"]), cat_en=esc(cat["en"]),
-        wa_url=esc("https://wa.me/%s?text=%s" % (WHATSAPP, _q(wa_en))),
         whatsapp=WHATSAPP, wa_pretty=pretty_phone(WHATSAPP),
         phone=PHONE, phone_pretty=pretty_phone(PHONE), email=EMAIL,
         jsonld=jsonld, css=CSS,

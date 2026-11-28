@@ -4,8 +4,11 @@
 
   HOW TO EDIT THIS SITE YOURSELF:
   - Products & prices: find "const PRODUCTS" in the <script> below and edit the list.
-  - Product images: each product has an "img" path to a file in assets/products/.
-    Swap in your own photo by dropping the file in that folder and changing the path.
+  - Product images: each product has an "img" built from MEDIA, the Cloudflare R2
+    bucket. Upload the new photo there and change the file name on that product.
+  - Shareable product pages in p/ are generated: after changing a product, run
+    tools/make-product-pages.py (and tools/make-product-og.py --upload for the
+    social share cards). Do not edit the files in p/ by hand.
   - Categories: find "const CATEGORIES".
   - Phone / WhatsApp / address / email: find "const CONTACT".
   - Arabic or English wording: find "const I18N" (en / ar objects).
@@ -1404,25 +1407,18 @@
       border-radius: 8px;
     }
 
-    .cod-link {
-      background: none;
-      border: 0;
-      text-decoration: underline;
-      font-weight: 600;
-      font-size: 13.5px;
-      color: var(--ink);
-      padding: 10px 0;
-    }
-
     .cod-form {
-      display: none;
+      display: flex;
       flex-direction: column;
       gap: 10px;
       margin-top: 4px;
     }
 
-    .cod-form.open {
-      display: flex;
+    .cod-intro {
+      margin: 2px 0 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
     }
 
     .cod-form label.req::after {
@@ -1874,10 +1870,10 @@
         cart_title: 'Your Order Chit',
         cart_empty_t: 'Your chit is empty', cart_empty_s: 'Add products to start an order.',
         subtotal: 'Subtotal', rx_note: 'Ordering a prescription item? Please also send a photo of your prescription on WhatsApp.',
-        cod_toggle: 'Cash on Delivery — fill delivery details',
+        cod_intro: 'Cash on delivery — we need these to bring your order to you.',
         cod_name: 'Full name', cod_phone: 'Phone number', cod_address: 'Delivery address', cod_note: 'Order note (optional)',
         cod_required: 'Please fill in this field before confirming your order.',
-        cod_submit: 'Confirm Cash on Delivery order', cod_disclaimer: "We'll message you on WhatsApp to confirm your order and delivery time.",
+        cod_disclaimer: "We'll message you on WhatsApp to confirm your order and delivery time.",
         btn_whatsapp: 'Send Order on WhatsApp', btn_call: 'Call to Order',
         toast_empty: 'Add an item to your chit first.', toast_whatsapp: 'Opening WhatsApp…', toast_cod: 'Opening WhatsApp to confirm your order…', toast_added: 'Added to your chit.', toast_max: 'Maximum quantity reached for this item.',
         a11y_cart: 'Open cart', a11y_menu: 'Menu', a11y_close: 'Close cart', a11y_chit: 'Order chit', a11y_fb: 'Facebook', a11y_wa: 'WhatsApp',
@@ -1907,10 +1903,10 @@
         cart_title: 'قائمة طلبك',
         cart_empty_t: 'قائمتك فارغة', cart_empty_s: 'أضف منتجات لبدء الطلب.',
         subtotal: 'المجموع الفرعي', rx_note: 'هل تطلب منتجًا بوصفة طبية؟ يرجى إرسال صورة الوصفة على واتساب أيضًا.',
-        cod_toggle: 'الدفع عند الاستلام — أدخل بيانات التوصيل',
+        cod_intro: 'الدفع عند الاستلام — نحتاج هذه البيانات لتوصيل طلبك.',
         cod_name: 'الاسم الكامل', cod_phone: 'رقم الهاتف', cod_address: 'عنوان التوصيل', cod_note: 'ملاحظة على الطلب (اختياري)',
         cod_required: 'يرجى ملء هذا الحقل قبل تأكيد الطلب.',
-        cod_submit: 'تأكيد طلب الدفع عند الاستلام', cod_disclaimer: 'سنراسلك على واتساب لتأكيد طلبك وموعد التوصيل.',
+        cod_disclaimer: 'سنراسلك على واتساب لتأكيد طلبك وموعد التوصيل.',
         btn_whatsapp: 'أرسل الطلب على واتساب', btn_call: 'اطلب بالهاتف',
         toast_empty: 'أضف منتجًا إلى قائمتك أولًا.', toast_whatsapp: 'جارٍ فتح واتساب…', toast_cod: 'جارٍ فتح واتساب لتأكيد طلبك…', toast_added: 'أُضيف إلى قائمتك.', toast_max: 'تم الوصول إلى الحد الأقصى للكمية لهذا المنتج.',
         a11y_cart: 'فتح السلة', a11y_menu: 'القائمة', a11y_close: 'إغلاق السلة', a11y_chit: 'قائمة الطلب', a11y_fb: 'فيسبوك', a11y_wa: 'واتساب',
@@ -1926,7 +1922,7 @@
 
     function newOrderNo() { return 'AJM-' + Math.floor(1000 + Math.random() * 9000); }
     const state = { lang: 'en', activeCat: 'all', cart: {}, orderNo: newOrderNo() };
-    const codState = { open: false, name: '', phone: '', address: '', note: '' };
+    const codState = { name: '', phone: '', address: '', note: '' };
     let lastFocused = null;
     const CART_KEY = 'ajm_cart';
     const LANG_KEY = 'ajm_lang';
@@ -2233,7 +2229,6 @@
 
       const foot = document.getElementById('chitFoot');
       if (ids.length === 0) {
-        codState.open = false;
         foot.innerHTML = `
       <div class="subtotal-row"><span>${t('subtotal')}</span><span class="mono">${fmt(0)}</span></div>
       <button class="btn btn-whatsapp btn-block" disabled><svg><use href="#icon-whatsapp"/></svg>${t('btn_whatsapp')}</button>
@@ -2243,32 +2238,23 @@
       foot.innerHTML = `
     <div class="subtotal-row"><span>${t('subtotal')}</span><span class="mono">${fmt(cartSubtotal())}</span></div>
     ${cartHasRx() ? `<div class="rx-note">${t('rx_note')}</div>` : ''}
-    <button type="button" class="btn btn-whatsapp btn-block" id="btnWhatsapp"><svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>${t('btn_whatsapp')}</button>
-    <a class="btn btn-outline btn-block" href="tel:${CONTACT.phone}" id="btnCall"><svg><use href="#icon-phone"/></svg>${t('btn_call')}</a>
-    <button type="button" class="cod-link" id="codToggle" aria-controls="codForm" aria-expanded="${codState.open}">${t('cod_toggle')}</button>
     <form class="cod-form" id="codForm" novalidate>
+      <p class="cod-intro">${t('cod_intro')}</p>
       <div><label class="req" for="codName">${t('cod_name')}</label><input type="text" id="codName" name="name" autocomplete="name" maxlength="${COD_LIMITS.name}" required aria-required="true"></div>
       <div><label class="req" for="codPhone">${t('cod_phone')}</label><input type="tel" id="codPhone" name="tel" autocomplete="tel" inputmode="tel" dir="ltr" maxlength="${COD_LIMITS.phone}" required aria-required="true" aria-describedby="codPhoneHint"><div class="field-hint" id="codPhoneHint">${t('cod_phone_hint')}</div></div>
       <div><label class="req" for="codAddress">${t('cod_address')}</label><textarea id="codAddress" name="address" autocomplete="street-address" maxlength="${COD_LIMITS.address}" required aria-required="true"></textarea></div>
       <div><label for="codNote">${t('cod_note')}</label><textarea id="codNote" name="note" maxlength="${COD_LIMITS.note}"></textarea></div>
-      <button type="submit" class="btn btn-primary btn-block">${t('cod_submit')}</button>
+      <button type="submit" class="btn btn-whatsapp btn-block" id="btnWhatsapp"><svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>${t('btn_whatsapp')}</button>
       <p class="cod-disclaimer">${t('cod_disclaimer')}</p>
     </form>
+    <a class="btn btn-outline btn-block" href="tel:${CONTACT.phone}" id="btnCall"><svg><use href="#icon-phone"/></svg>${t('btn_call')}</a>
   `;
       const codForm = document.getElementById('codForm');
-      document.getElementById('btnWhatsapp').addEventListener('click', () => sendOrder(null));
-      document.getElementById('codToggle').addEventListener('click', () => {
-        codState.open = !codState.open;
-        codForm.classList.toggle('open', codState.open);
-        document.getElementById('codToggle').setAttribute('aria-expanded', String(codState.open));
-        if (codState.open) setTimeout(() => document.getElementById('codName').focus(), 30);
-      });
       [['codName', 'name'], ['codPhone', 'phone'], ['codAddress', 'address'], ['codNote', 'note']].forEach(([elId, key]) => {
         const el = document.getElementById(elId);
         el.value = codState[key] || '';
         el.addEventListener('input', () => { codState[key] = el.value; saveCod(); });
       });
-      codForm.classList.toggle('open', codState.open);
       codForm.addEventListener('submit', e => {
         e.preventDefault();
         const customer = {
@@ -2307,11 +2293,14 @@
       return lines.join('\n');
     }
 
+    /* An order only ever leaves this page with a name, phone and address attached;
+       the form above is the only caller, and it validates all three first. */
     function sendOrder(customer) {
+      if (!customer) return;
       if (Object.keys(state.cart).length === 0) { showToast(t('toast_empty')); return; }
       const msg = buildMessage(customer);
       const url = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(msg)}`;
-      showToast(customer ? t('toast_cod') : t('toast_whatsapp'));
+      showToast(t('toast_cod'));
       const opened = window.open(url, '_blank');
       if (!opened) {
         // Pop-up blocked (some in-app browsers): open WhatsApp in this tab, keep the chit so nothing is lost.
@@ -2320,8 +2309,8 @@
       }
       state.cart = {};
       state.orderNo = newOrderNo();
-      if (customer) { codState.note = ''; saveCod(); }
-      codState.open = false;
+      codState.note = '';
+      saveCod();
       renderCart();
       updateCartCount();
       closeDrawer();
