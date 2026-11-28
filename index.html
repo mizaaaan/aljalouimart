@@ -19,9 +19,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Al Jaloui Mart — Shop Your Dream</title>
   <meta name="description"
-    content="Al Jaloui Mart, Doha, Qatar — bukhoor burners, toys, Islamic products, kids' art sets and everyday essentials. Order via WhatsApp, phone, or cash on delivery.">
+    content="Al Jaloui Mart, Doha, Qatar — Quran speakers, bukhoor burners, health and wellness, car care tools, toys and kids' art sets. Order via WhatsApp, phone, or cash on delivery.">
   <meta name="keywords"
-    content="Al Jaloui Mart, online shop Doha, bukhoor burner Qatar, electric incense burner Doha, toys Qatar, Quran speaker Qatar, kids art set Doha, cash on delivery Doha">
+    content="Al Jaloui Mart, online shop Doha, Quran speaker Qatar, bukhoor burner Doha, heating belt Qatar, car polisher Doha, toys Qatar, kids art set Doha, cash on delivery Doha">
   <meta name="author" content="Al Jaloui Mart">
   <link rel="canonical" href="https://aljaloui.com/">
   <meta name="robots" content="index, follow, max-image-preview:large">
@@ -38,7 +38,7 @@
   <meta property="og:url" content="https://aljaloui.com/">
   <meta property="og:title" content="Al Jaloui Mart — Shop Your Dream">
   <meta property="og:description"
-    content="Bukhoor burners, toys, Islamic products and kids' art sets from Al Jaloui Mart, Doha, Qatar. Order via WhatsApp, phone, or cash on delivery.">
+    content="Quran speakers, bukhoor burners, health and wellness, car care tools, toys and kids' art sets from Al Jaloui Mart, Doha, Qatar. Order via WhatsApp, phone, or cash on delivery.">
   <meta property="og:image" content="https://aljaloui.com/og-image.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
@@ -49,7 +49,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Al Jaloui Mart — Shop Your Dream">
   <meta name="twitter:description"
-    content="Bukhoor burners, toys, Islamic products and kids' art sets from Al Jaloui Mart, Doha, Qatar. Order via WhatsApp, phone, or cash on delivery.">
+    content="Quran speakers, bukhoor burners, health and wellness, car care tools, toys and kids' art sets from Al Jaloui Mart, Doha, Qatar. Order via WhatsApp, phone, or cash on delivery.">
   <meta name="twitter:image" content="https://aljaloui.com/og-image.png">
   <meta name="twitter:image:alt" content="Al Jaloui Mart — shopping bag logo and tagline">
   <script type="application/ld+json">
@@ -61,7 +61,7 @@
   "url": "https://aljaloui.com/",
   "image": "https://aljaloui.com/og-image.png",
   "logo": "https://aljaloui.com/assets/brand/logo-stacked.png",
-  "description": "Al Jaloui Mart is a neighbourhood store in Doha, Qatar, delivering bukhoor burners, toys, Islamic products, kids' art sets and everyday essentials.",
+  "description": "Al Jaloui Mart is a neighbourhood store in Doha, Qatar, delivering Quran speakers, bukhoor burners, health and wellness products, car care tools, toys and kids' art sets.",
   "telephone": "+97474733400",
   "email": "aljalouimedia@gmail.com",
   "priceRange": "QAR",
@@ -509,6 +509,10 @@
 
     .hero-viewport {
       overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      box-shadow: var(--shadow);
     }
 
     .hero-slides {
@@ -523,7 +527,7 @@
     .hero-slide {
       flex: 0 0 100%;
       margin: 0;
-      padding: 4px 8px 0;
+      padding: 22px 22px 18px;
       text-align: center;
     }
 
@@ -533,10 +537,9 @@
       height: auto;
       aspect-ratio: 1 / 1;
       object-fit: contain;
-      border-radius: var(--radius);
+      border-radius: 10px;
       margin: 0 auto;
       display: block;
-      filter: drop-shadow(0 18px 28px rgba(27, 42, 78, .16));
     }
 
     .hero-slide figcaption {
@@ -1668,9 +1671,9 @@
             <div class="eyebrow" data-i18n="about_eyebrow">ABOUT THE STORE</div>
             <h2 data-i18n="brand_full">Al Jaloui Mart</h2>
             <div class="role" data-i18n="about_role">Neighbourhood mart · Doha, Qatar</div>
-            <p data-i18n="about_body">Al Jaloui Mart is a family-run store in Doha, Qatar, supplying bukhoor
-              burners, toys, Islamic products, kids&#39; art sets and everyday essentials. Orders are placed in a
-              WhatsApp chat and paid for cash on delivery — no app, no account.</p>
+            <p data-i18n="about_body">Al Jaloui Mart is a family-run store in Doha, Qatar, supplying Quran
+              speakers, bukhoor burners, health and wellness, car care tools, toys and kids&#39; art sets. Orders are
+              placed in a WhatsApp chat and paid for cash on delivery — no app, no account.</p>
             <span class="reg" data-i18n="about_reg">WhatsApp orders · Cash on delivery</span>
           </div>
         </div>
@@ -1755,20 +1758,25 @@
        price = Qatari Riyals (QAR). Decimals allowed, e.g. price:3.5
        !! The prices below are PLACEHOLDERS — replace with the shop's real prices before launch. */
     /* Product images live in the Cloudflare R2 bucket "aljalouimart-media".
-       To swap an image: upload the new file to that bucket under products/ and change the name below. */
-    const MEDIA = 'https://pub-75ddd09c0ee44e93be11c31762842a79.r2.dev/products/v2';
+       To swap an image: upload the new file to that bucket under products/v3/ and change the name below. */
+    const MEDIA = 'https://pub-75ddd09c0ee44e93be11c31762842a79.r2.dev/products/v3';
     const PRODUCTS = [
-      { id: 1, cat: 'bukhoor', rx: false, img: MEDIA + '/incense-burner.webp', nameEn: 'Mini Portable Incense Burner', nameAr: 'مبخرة كهربائية محمولة صغيرة', descEn: 'Rechargeable bukhoor burner with LED power indicator — small enough for the car, office or travel.', descAr: 'مبخرة بخور قابلة لإعادة الشحن مع مؤشر LED للطاقة — صغيرة بما يكفي للسيارة والمكتب والسفر.', price: 45 },
-      { id: 2, cat: 'toys', rx: false, img: MEDIA + '/gear-racing-car.webp', nameEn: 'Concept Racing Transparent Gear Car', nameAr: 'سيارة سباق شفافة بتروس متحركة', descEn: 'Transparent concept car with moving coloured gears, lights and music. Ages 3+.', descAr: 'سيارة شفافة بتروس ملوّنة متحركة مع أضواء وموسيقى. من عمر 3 سنوات فأكثر.', price: 35 },
-      { id: 3, cat: 'islamic', rx: false, img: MEDIA + '/quran-speaker.webp', nameEn: 'Equantu SQ669 Quran Speaker', nameAr: 'مكبر صوت القرآن إكوانتو SQ669', descEn: 'Wall-plug Quran speaker with remote control, USB and Bluetooth. Boxed with a one-year warranty.', descAr: 'مكبر صوت للقرآن يعمل بالتوصيل بالمقبس مع جهاز تحكم ومنفذ USB وبلوتوث. معبأ مع ضمان سنة.', price: 85 },
-      { id: 4, cat: 'art', rx: false, img: MEDIA + '/art-set-168pcs.webp', nameEn: 'Super Mega Art Set (168 pcs)', nameAr: 'طقم الرسم الكبير (168 قطعة)', descEn: '168-piece set with colour pencils, oil pastels, watercolours, markers, palette and brush.', descAr: 'طقم من 168 قطعة يضم أقلام تلوين وألوان زيتية وألوان مائية وأقلام ماركر ولوح ألوان وفرشاة.', price: 55 }
+      { id: 1, cat: 'wellness', rx: false, img: MEDIA + '/warm-palace-belt.webp', nameEn: 'Smart Warm Palace Belt', nameAr: 'حزام التدفئة الذكي', descEn: 'Cordless heating belt with adjustable warmth settings and a rechargeable battery. Light enough to wear under clothes.', descAr: 'حزام تدفئة لاسلكي بإعدادات حرارة قابلة للتعديل وبطارية قابلة لإعادة الشحن. خفيف بما يكفي لارتدائه تحت الملابس.', price: 65 },
+      { id: 2, cat: 'tools', rx: false, img: MEDIA + '/polishing-machine.webp', nameEn: 'Cordless Waxing & Polishing Machine', nameAr: 'آلة تلميع وتشميع لاسلكية', descEn: 'Lithium-battery polisher for car paint, furniture and floors. Supplied with foam and wool pads.', descAr: 'آلة تلميع تعمل ببطارية ليثيوم لطلاء السيارات والأثاث والأرضيات، مع وسادات إسفنجية وصوفية.', price: 120 },
+      { id: 3, cat: 'islamic', rx: false, img: MEDIA + '/quran-lamp-sq112.webp', nameEn: 'Touch Lamp Quran Speaker (SQ-112)', nameAr: 'مكبر صوت القرآن مع مصباح لمسي (SQ-112)', descEn: 'Bedside touch lamp and Bluetooth speaker with 16 reciters, 18 translations, app control and RGB light modes.', descAr: 'مصباح لمسي بجانب السرير ومكبر بلوتوث مع 16 قارئًا و18 ترجمة وتحكم عبر التطبيق وإضاءة RGB.', price: 75 },
+      { id: 4, cat: 'bukhoor', rx: false, img: MEDIA + '/incense-burner.webp', nameEn: 'Mini Portable Incense Burner', nameAr: 'مبخرة كهربائية محمولة صغيرة', descEn: 'Rechargeable bukhoor burner with quick heating, Type-C charging and a wrist strap.', descAr: 'مبخرة بخور قابلة لإعادة الشحن بتسخين سريع وشحن Type-C ومعلاق لليد.', price: 45 },
+      { id: 5, cat: 'toys', rx: false, img: MEDIA + '/gear-racing-car.webp', nameEn: 'Concept Racing Transparent Gear Car', nameAr: 'سيارة سباق شفافة بتروس متحركة', descEn: 'Transparent concept car with moving coloured gears, lights and music. Ages 3+.', descAr: 'سيارة شفافة بتروس ملوّنة متحركة مع أضواء وموسيقى. من عمر 3 سنوات فأكثر.', price: 35 },
+      { id: 6, cat: 'islamic', rx: false, img: MEDIA + '/quran-speaker-sq669.webp', nameEn: 'Equantu SQ669 Quran Speaker', nameAr: 'مكبر صوت القرآن إكوانتو SQ669', descEn: 'Wall-plug Quran speaker with remote control, USB and Bluetooth. Boxed with a one-year warranty.', descAr: 'مكبر صوت للقرآن يعمل بالتوصيل بالمقبس مع جهاز تحكم ومنفذ USB وبلوتوث. معبأ مع ضمان سنة.', price: 85 },
+      { id: 7, cat: 'art', rx: false, img: MEDIA + '/art-set-168pcs.webp', nameEn: 'Super Mega Art Set (168 pcs)', nameAr: 'طقم الرسم الكبير (168 قطعة)', descEn: '168-piece set with colour pencils, oil pastels, watercolours, markers, palette and brush.', descAr: 'طقم من 168 قطعة يضم أقلام تلوين وألوان زيتية وألوان مائية وأقلام ماركر ولوح ألوان وفرشاة.', price: 55 }
     ];
     const CATEGORIES = [
       { key: 'all', en: 'All', ar: 'الكل', color: 'var(--ink)' },
-      { key: 'bukhoor', en: 'Bukhoor & Fragrance', ar: 'البخور والعطور', color: 'var(--brand)' },
-      { key: 'toys', en: 'Toys & Games', ar: 'الألعاب والترفيه', color: 'var(--slate)' },
-      { key: 'islamic', en: 'Islamic Products', ar: 'المنتجات الإسلامية', color: 'var(--gold)' },
-      { key: 'art', en: 'Art & Stationery', ar: 'الفنون والقرطاسية', color: 'var(--navy)' }
+      { key: 'islamic', en: 'Islamic Products', ar: 'المنتجات الإسلامية', color: 'var(--brand)' },
+      { key: 'bukhoor', en: 'Bukhoor & Fragrance', ar: 'البخور والعطور', color: 'var(--gold)' },
+      { key: 'wellness', en: 'Health & Wellness', ar: 'الصحة والعافية', color: 'var(--slate)' },
+      { key: 'tools', en: 'Tools & Car Care', ar: 'الأدوات والعناية بالسيارة', color: 'var(--navy)' },
+      { key: 'toys', en: 'Toys & Games', ar: 'الألعاب والترفيه', color: 'var(--accent-deep)' },
+      { key: 'art', en: 'Art & Stationery', ar: 'الفنون والقرطاسية', color: 'var(--brand-dark)' }
     ];
     /* ============ EDIT YOUR CONTACT INFO HERE ============ */
     const CONTACT = {
@@ -1812,7 +1820,7 @@
         sync_cart: 'Chit updated in another tab.', sync_lang: 'Language changed in another tab.', sync_cat: 'Category changed in another tab.',
         wa_msg: 'Hello Al Jaloui Mart! I have a question.', a11y_wa_chat: 'Chat with us on WhatsApp', qty_less: 'Decrease quantity', qty_more: 'Increase quantity',
         about_eyebrow: 'ABOUT THE STORE', about_role: 'Neighbourhood mart · Doha, Qatar',
-        about_body: 'Al Jaloui Mart is a family-run store in Doha, Qatar, supplying bukhoor burners, toys, Islamic products, kids&#39; art sets and everyday essentials. Orders are placed in a WhatsApp chat and paid for cash on delivery — no app, no account.',
+        about_body: 'Al Jaloui Mart is a family-run store in Doha, Qatar, supplying Quran speakers, bukhoor burners, health and wellness, car care tools, toys and kids&#39; art sets. Orders are placed in a WhatsApp chat and paid for cash on delivery — no app, no account.',
         about_reg: 'WhatsApp orders · Cash on delivery',
         footer_tagline: 'Shop Your Dream.', footer_visit: 'Visit / Contact', footer_follow: 'Follow',
         footer_disclaimer: 'Prices and availability may change without notice.'
@@ -1845,7 +1853,7 @@
         sync_cart: 'تم تحديث قائمة الطلب في تبويب آخر.', sync_lang: 'تم تغيير اللغة في تبويب آخر.', sync_cat: 'تم تغيير الفئة في تبويب آخر.',
         wa_msg: 'مرحبًا الجالوي مارت! لدي سؤال.', a11y_wa_chat: 'تحدث معنا على واتساب', qty_less: 'تقليل الكمية', qty_more: 'زيادة الكمية',
         about_eyebrow: 'عن المتجر', about_role: 'متجر الحي · الدوحة، قطر',
-        about_body: 'الجالوي مارت متجر عائلي في الدوحة، قطر، يوفّر المباخر والألعاب والمنتجات الإسلامية وأطقم الرسم للأطفال والمستلزمات اليومية. تُرسل الطلبات عبر محادثة واتساب وتُدفع عند الاستلام — بدون تطبيق أو حساب.',
+        about_body: 'الجالوي مارت متجر عائلي في الدوحة، قطر، يوفّر مكبرات صوت القرآن والمباخر ومنتجات الصحة والعافية وأدوات العناية بالسيارة والألعاب وأطقم الرسم للأطفال. تُرسل الطلبات عبر محادثة واتساب وتُدفع عند الاستلام — بدون تطبيق أو حساب.',
         about_reg: 'الطلب عبر واتساب · الدفع عند الاستلام',
         footer_tagline: 'تسوق حلمك.', footer_visit: 'زيارة / تواصل', footer_follow: 'تابعنا',
         footer_disclaimer: 'قد تتغير الأسعار والتوفر دون إشعار.'
