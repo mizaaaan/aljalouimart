@@ -3,8 +3,15 @@
 
 Run from the project folder:  python3 tools/make_og.py
 Then commit the updated og-image.png.
+
+HEADS UP: the committed og-image.png is not a plain output of this script.
+Its tagline reads "To the satisfaction of Almighty." while the script below
+draws "Shop Your Dream.", and the WhatsApp line was patched in place when
+the number changed. Running this script WILL overwrite both with whatever
+is written here, so look at the result before committing it.
 """
 import os
+import re
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,11 +37,24 @@ def find_font(names):
 FONT_B = find_font([
     "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     "/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf",
+    r"C:\Windows\Fonts\verdanab.ttf",
+    r"C:\Windows\Fonts\segoeuib.ttf",
 ])
 FONT_R = find_font([
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     "/usr/share/fonts/dejavu/DejaVuSans.ttf",
+    r"C:\Windows\Fonts\verdana.ttf",
+    r"C:\Windows\Fonts\segoeui.ttf",
 ])
+
+
+def whatsapp_number():
+    """Read the WhatsApp number from index.html so this line cannot drift."""
+    src = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
+    d = re.search(r"whatsapp: '(\d+)'", src).group(1)
+    if d.startswith("974") and len(d) == 11:
+        return "+974 %s %s" % (d[3:7], d[7:])
+    return "+" + d
 
 img = Image.new("RGB", (W, H), WHITE)
 d = ImageDraw.Draw(img)
@@ -84,7 +104,7 @@ for text in lines:
     d.text((x0 + 4, y), text, font=f, fill=INK_SOF)
     y += 30
 
-order_line = "Order on WhatsApp \u00b7 +974 7473 3400"
+order_line = "Order on WhatsApp \u00b7 " + whatsapp_number()
 d.text((x0 + 4, y + 6), order_line, font=fit(order_line, FONT_B, 22, 500), fill=NAVY)
 
 out = os.path.join(ROOT, "og-image.png")

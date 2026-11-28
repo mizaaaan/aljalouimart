@@ -6,7 +6,7 @@ send it to your WhatsApp, or fill in delivery details for **Cash on Delivery** (
 also arrives as a WhatsApp message).
 
 > **Orders are not stored anywhere except in your WhatsApp chat.** Keep the shop phone
-> (+974 7473 3400) logged in to WhatsApp and check it regularly.
+> (+974 7473 3411) logged in to WhatsApp and check it regularly.
 
 ---
 
@@ -66,7 +66,7 @@ Edit the wording in `const I18N` (`hero_title_1`, `hero_title_2`, `hero_title_3`
 
 ### Change phone numbers, WhatsApp, email, Facebook
 Search `const CONTACT`. Change the values there — the footer, buttons and floating WhatsApp button all update from it.
-The WhatsApp number must be digits only with the country code (e.g. `97474733400`).
+The WhatsApp number must be digits only with the country code (e.g. `97474733411`).
 Also change the phone and email in the `<script type="application/ld+json">` block near the top (this is the data Google shows about your shop).
 
 ### Change wording (English / Arabic)
