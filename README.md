@@ -37,8 +37,14 @@ GitHub Pages from `main` / root. Any static host also works (serve `index.html` 
 4. `set-domain.py` rewrites canonical / Open Graph / Twitter / JSON-LD / robots / sitemap URLs.
 
 ## Security notes
-A `Content-Security-Policy` meta tag restricts scripts/styles/fonts to self + Google Fonts and blocks all network calls
-(`connect-src 'none'`). Customer input is only ever placed in a URL-encoded WhatsApp link, never into the DOM as HTML.
+A `Content-Security-Policy` meta tag restricts scripts/styles/fonts to self + Google Fonts. Customer input is only
+ever placed in a URL-encoded WhatsApp link, never into the DOM as HTML.
+
+The home page additionally allows the Meta Pixel: `connect.facebook.net` under `script-src`, and `www.facebook.com`
+under `img-src` and `connect-src`. These three are the only third-party hosts the policy admits, and they exist
+solely for that pixel — remove the pixel and the three entries should go with it. The product pages under `p/`
+keep the tighter original policy (`connect-src 'none'`) because they carry no pixel.
+
 GitHub Pages cannot send HTTP security headers; use Cloudflare or similar if you need them.
 
 ## Branding
