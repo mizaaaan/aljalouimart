@@ -44,7 +44,7 @@ GitHub Pages cannot send HTTP security headers; use Cloudflare or similar if you
 ## Branding
 The site uses the official logo files (not a redrawn approximation). Brand colours: navy `#11234F`, yellow `#FFE00E`
 (CSS variables `--brand`, `--accent`). Logo sizes are CSS variables under `LOGO SIZES` in `:root` (`--logo-h`, `--logo-h-footer`,
-`--hero-d`, `--hero-logo-scale`, `--seal-d`) with responsive overrides at ≤370 px and ≥900 px. Logo `<img>` tags carry intrinsic
+`--seal-d`) with responsive overrides at ≤370 px and ≥900 px. Logo `<img>` tags carry intrinsic
 `width`/`height` (no layout shift), translated `alt` text (`data-alt` → `I18N.brand_full`) and use `height` + `width:auto`, so a
 replacement file with a different aspect ratio still displays correctly. Verified at 320–1920 px, EN + AR, no overflow.
 

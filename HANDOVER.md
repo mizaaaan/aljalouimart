@@ -52,14 +52,17 @@ All logo pictures live in `assets/brand/`. To **replace** one, overwrite the fil
 |------|------------------|
 | `logo-horizontal.png` | Top header (full colour) |
 | `logo-horizontal-light.png` | Footer, on the dark blue background (all-yellow version) |
-| `logo-stacked.png` | Big round badge on the home page |
+| `logo-stacked.png` | Big round badge on the home page (also the web-search logo and link-preview picture) |
 | `logo-mark.png` | Small round badge in the About section |
 
 To make a logo **bigger or smaller**, open `index.html`, search `LOGO SIZES` and change the numbers
-(`--logo-h` = header, `--logo-h-footer` = footer, `--hero-d` = home badge size, `--hero-logo-scale` = how much of the badge the logo fills).
+(`--logo-h` = header, `--logo-h-footer` = footer, `--hero-d` = home badge size, `--hero-logo-scale` = how much of the badge the logo fills, `--seal-d` = round badge in the About section).
 Phones and computers are handled automatically; the logo never overflows the screen.
 Your original high-resolution logo files are kept in `brand-source/` (not used by the website itself).
 If you also change the logo, re-run `tools/make_brand_assets.py`, `tools/make_icons.py` and `tools/make_og.py` to refresh the browser tab icon, phone home-screen icon and the picture shown when the link is shared.
+
+### The home-page top section (hero)
+Edit the wording in `const I18N` (`hero_title_1`, `hero_title_2`, `hero_title_3`, `hero_sub`, `hero_cta_browse`, `hero_cta_contact`) — English and Arabic blocks.
 
 ### Change phone numbers, WhatsApp, email, Facebook
 Search `const CONTACT`. Change the values there — the footer, buttons and floating WhatsApp button all update from it.

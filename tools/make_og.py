@@ -56,7 +56,7 @@ x0 = 640
 d.rounded_rectangle((x0 + 4, 150, x0 + 132, 162), radius=6, fill=YELLOW)
 d.text((x0 + 4, 186), "Your neighbourhood", font=ImageFont.truetype(FONT_B, 46), fill=NAVY)
 d.text((x0 + 4, 244), "mart is now online", font=ImageFont.truetype(FONT_B, 46), fill=NAVY)
-d.text((x0 + 4, 330), "To the satisfaction of Almighty.",
+d.text((x0 + 4, 330), "Shop Your Dream.",
        font=ImageFont.truetype(FONT_R, 27), fill=INK_SOF)
 
 # separator
